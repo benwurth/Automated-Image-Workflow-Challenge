@@ -53,10 +53,10 @@ namespace Fotostatur.ImageAnalyzer {
             _s3Client = new AmazonS3Client();
             
             // social media keys
-            // _consumerKey = config.ReadText("TwitterConsumerKey");
-            // _consumerSecret = config.ReadText("TwitterConsumerSecret");
-            // _accessToken = config.ReadText("TwitterAccessToken");
-            // _accessTokenSecret = config.ReadText("TwitterAccessSecret");
+            _consumerKey = config.ReadText("TwitterConsumerKey");
+            _consumerSecret = config.ReadText("TwitterConsumerSecret");
+            _accessToken = config.ReadText("TwitterAccessToken");
+            _accessTokenSecret = config.ReadText("TwitterAccessSecret");
             
             // Headshot paths
             _headshotFileName = config.ReadText("HeadshotFileName");
@@ -71,7 +71,7 @@ namespace Fotostatur.ImageAnalyzer {
             _foundLabels = new List<FoundCriterias>();
             _totalScore = 0;
             _criteriaFiltered = 0;
-            _criteriaThreshold = 50;
+            _criteriaThreshold = 51;
             
             // Get the Bucket name and key from the event
             GetEventInfo(s3Event);
@@ -101,10 +101,10 @@ namespace Fotostatur.ImageAnalyzer {
             
             // Post if within threshold
             if (finalScore > _criteriaThreshold) {
-                // await DownloadS3Image();
-                // ResizeImage();
-                // UploadImage();
-                // TwitterUpload();
+                await DownloadS3Image();
+                ResizeImage();
+                UploadImage();
+                TwitterUpload();
             }
             return new FunctionResponse();
         }
@@ -220,13 +220,18 @@ namespace Fotostatur.ImageAnalyzer {
         // ########################################
         private async Task DownloadS3Image() {
             LogInfo("Downloading image");
-            
+            await new TransferUtility(_s3Client).DownloadAsync(_tempResizeFilename, _sourceBucket, _sourceKey);
             // BOSS: Download and save image locally from S3
         }
         
         private void ResizeImage() {
             LogInfo("Resize image");
-            
+            using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load(_tempResizeFilename)) {
+                image.Mutate( x => x.Resize(400, 400)
+                .Grayscale());
+                image.Save(_tempResizeFilename);
+            }
+
             // BOSS: load the image and resize (https://github.com/SixLabors/ImageSharp#api)
         }
 
@@ -235,7 +240,7 @@ namespace Fotostatur.ImageAnalyzer {
             // BOSS: upload to twitter
             try {
                 LogInfo("Twitter image");
-                var bytes = File.ReadAllBytesAsync("LOCAL FILE PATH").Result;
+                var bytes = File.ReadAllBytesAsync(_tempResizeFilename).Result;
                 Auth.SetUserCredentials(_consumerKey, _consumerSecret, _accessToken, _accessTokenSecret);
                 Account.UpdateProfileImage(bytes);
             }

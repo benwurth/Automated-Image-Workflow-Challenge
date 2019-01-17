@@ -4,25 +4,25 @@ Description: Photo/image rating and profile posting app
 
 Inputs:
   
-#  - Parameter: TwitterConsumerKey
-#    Scope: ImageAnalyzer
-#    Default: TODO
-#    Type: Secret
-#    
-#  - Parameter: TwitterConsumerSecret
-#    Scope: ImageAnalyzer
-#    Default: TODO
-#    Type: Secret
-#    
-#  - Parameter: TwitterAccessToken
-#    Scope: ImageAnalyzer
-#    Default: TODO
-#    Type: Secret
-#    
-#  - Parameter: TwitterAccessSecret
-#    Scope: ImageAnalyzer
-#    Default: TODO
-#    Type: Secret
+  - Parameter: TwitterConsumerKey
+    Scope: ImageAnalyzer
+    Default: AQICAHhoDgkUZm1vnwYzRpm8GjmRR/D01Mnf3a60uc+y3OQg0gF0utLYZknhtLLTmvXaLmBeAAAAdzB1BgkqhkiG9w0BBwagaDBmAgEAMGEGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMj4NVQPw3iAJIfARwAgEQgDQRoSRHp0TPepJWKF9oxiWf+1F3R0zoZCp5wEYWzVZ06+gG9LbQ7ifKZOVG743HhFUJ+rLi
+    Type: Secret
+   
+  - Parameter: TwitterConsumerSecret
+    Scope: ImageAnalyzer
+    Default: AQICAHhoDgkUZm1vnwYzRpm8GjmRR/D01Mnf3a60uc+y3OQg0gHV1y444LuplBibdAXvfH9CAAAAkjCBjwYJKoZIhvcNAQcGoIGBMH8CAQAwegYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAyqBtchGN++hivU4agCARCATVakNCEEysb8sKcLjFI7Ok+Ga8R+e2OoLxYwogFCDjO94D85uyhVJXL7qszJun/VS8oX6w2/7ykvMrqifXTI0Jhde/NTGYJKuf4KSN4n
+    Type: Secret
+   
+  - Parameter: TwitterAccessToken
+    Scope: ImageAnalyzer
+    Default: AQICAHhoDgkUZm1vnwYzRpm8GjmRR/D01Mnf3a60uc+y3OQg0gFtjPAI6Wryf/tRCDM47z+pAAAAkjCBjwYJKoZIhvcNAQcGoIGBMH8CAQAwegYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAzBw4XZQR3q0WP1c1UCARCATViezLmlp2yTRccGcBZH4XXOdfI91rQQ22dDkrgXE0N95LAnN5mbRd5FPvndEVkZeqR7UiY5DcLKgWrsF3TCuq/MIzRm6Rt+g9DrFQ6e
+    Type: Secret
+   
+  - Parameter: TwitterAccessSecret
+    Scope: ImageAnalyzer
+    Default: AQICAHhoDgkUZm1vnwYzRpm8GjmRR/D01Mnf3a60uc+y3OQg0gFH5Xx/9hs3W4tMEQKxI9CJAAAAjDCBiQYJKoZIhvcNAQcGoHwwegIBADB1BgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDFe+P3Lrw0yKrpOgHAIBEIBI2Y7Ux8EU7eNXmY07IHBblYML7tCIlDr16MVwPibULvHHNTHhaHT9dLamnxj3xRJuJNr60eeetVlEmcEkqiQV963f+zCNQVjb
+    Type: Secret
     
   - Parameter: HeadshotFileName
     Scope: ImageAnalyzer
