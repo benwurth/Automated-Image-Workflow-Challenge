@@ -26,7 +26,7 @@ Inputs:
     
   - Parameter: HeadshotFileName
     Scope: ImageAnalyzer
-    Default: TODO
+    Default: brooks01.jpg
     Type: String
 
 Variables:

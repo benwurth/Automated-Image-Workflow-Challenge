@@ -123,29 +123,42 @@ namespace Fotostatur.ImageAnalyzer {
         // ##### DETECT LABELS - LEVEL 1
         // ########################################
         public async Task<DetectLabelsResponse> DetectLabels() {
-            
-            // LEVEL 1: detect labels from the picture
-            return new DetectLabelsResponse();
+            return await _rekognitionClient.DetectLabelsAsync(new DetectLabelsRequest{
+                Image = new Image { S3Object = new S3Object {
+                    Bucket = _sourceBucket,
+                    Name = _sourceKey
+                }}
+            });
         }
 
         public void ScoreLabels(DetectLabelsResponse detectLabelsResponse) {
             LogInfo(JsonConvert.SerializeObject(detectLabelsResponse));
             
-            // LEVEL 1: determine if photo meets your label criteria
+            float minConfidence = 90f;
+            foreach(var label in detectLabelsResponse.Labels) {
+                AddTotals(label.Name, label.Confidence);
+            }
         }
         
         // ########################################
         // ### DETECT TEXT - LEVEL 2
         // ########################################
         private async Task<DetectTextResponse> DetectText() {
-            
-            // LEVEL 2: detect text in the picture
-            return new DetectTextResponse();
+            return await _rekognitionClient.DetectTextAsync(new DetectTextRequest{
+                Image = new Image { S3Object = new S3Object {
+                    Bucket = _sourceBucket,
+                    Name = _sourceKey
+                }}
+            });
         }
 
         private void ScoreText(DetectTextResponse detectTextResponse) {
             LogInfo(JsonConvert.SerializeObject(detectTextResponse));
             
+            float minConfidence = 90f;
+            foreach(var text in detectTextResponse.TextDetections) {
+                AddTotals(text.DetectedText, text.Confidence);
+            }
             // LEVEL 2: make a criteria around detecting text in an image
         }
         
@@ -153,14 +166,27 @@ namespace Fotostatur.ImageAnalyzer {
         // ### Face Compare - LEVEL 3
         // ########################################
         private async Task<CompareFacesResponse> CompareFaces() {
-            
+            return await _rekognitionClient.CompareFacesAsync(new CompareFacesRequest{
+                TargetImage = new Image {S3Object = new S3Object {
+                    Bucket = _comparingImageBucket,
+                    Name = _comparingImageKey
+                }},
+                SourceImage = new Image{S3Object = new S3Object {
+                    Bucket = _sourceBucket,
+                    Name = _sourceKey
+                }}
+            });
             // LEVEL 3: compare face in the picture
-            return new CompareFacesResponse();
+            // return new CompareFacesResponse();
         }
 
         private void ScoreCompare(CompareFacesResponse compareFacesResponse) {
             LogInfo(JsonConvert.SerializeObject(compareFacesResponse));
             
+            float minConfidence = 90f;
+            foreach(var faceMatch in compareFacesResponse.FaceMatches) {
+                AddTotals(faceMatch.Face.BoundingBox.ToString(), faceMatch.Similarity);
+            }
             // LEVEL 3: make a criteria around comparing faces
         }
 
@@ -169,13 +195,22 @@ namespace Fotostatur.ImageAnalyzer {
         // ########################################
         public async Task<DetectFacesResponse> DetectFaces() {
             
-            // LEVEL 4: detect faces in the picture
-            return new DetectFacesResponse();
+            return await _rekognitionClient.DetectFacesAsync(new DetectFacesRequest{
+                Attributes = new List<string> {"ALL"},
+                Image = new Image { S3Object = new S3Object {
+                    Bucket = _sourceBucket,
+                    Name = _sourceKey
+                }}
+            });
         }
 
-        public void ScoreFaces(DetectFacesResponse detectFactResponse) {
-            LogInfo(JsonConvert.SerializeObject(detectFactResponse));
+        public void ScoreFaces(DetectFacesResponse detectFaceResponse) {
+            LogInfo(JsonConvert.SerializeObject(detectFaceResponse));
 
+            foreach(var faceDetail in detectFaceResponse.FaceDetails) {
+                AddTotals(faceDetail.Mustache.ToString(), faceDetail.Mustache.Confidence);
+                
+            }
             // LEVEL 4: choose one or more categories to build criteria from
             // ageRange, beard, boundingBox, eyeglasses, eyesOpen, gender, mouthOpen, mustache, pose, quality, smile, sunglasses
         }
